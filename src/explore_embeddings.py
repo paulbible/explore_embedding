@@ -1,7 +1,19 @@
+"""
+    This program works to search embeddings for similar and dissimilar words.
+    Use this for an interactive way to explore the embedding space.
+"""
 import numpy as np
 
 
 def load_embeddings(filename):
+    """
+    This function loads the embedding from a file and returns 2 things
+    1) a word_map, this is a dictionary that maps words to an index.
+    2) a matrix of row vectors for each work, index the work using the vector.
+
+    :param filename:
+    :return: word_map, matrix
+    """
     count = 0
     matrix = []
     word_map = {}
@@ -23,6 +35,12 @@ def load_embeddings(filename):
 
 
 def load_text_words(filename):
+    """
+    This function takes a text document and creates a list of works for the document.
+    It returns the list of text words.
+    :param filename:
+    :return: text_words
+    """
     text_words = []
     with open(filename) as f:
         for line in f:
@@ -36,10 +54,26 @@ def load_text_words(filename):
 
 
 def cossim(vA, vB):
+    """
+    Calcuate the cosine similarity value.
+    Returns the similarity value, range: [-1, 1]
+    :param vA:
+    :param vB:
+    :return: similarity
+    """
     return np.dot(vA, vB) / (np.sqrt(np.dot(vA, vA)) * np.sqrt(np.dot(vB, vB)))
 
 
 def search_similar(word_map, matrix, query, threshold=0.95):
+    """
+    Search through the matrix and get words that are similar to the give word
+    using the embedding vectors.
+    :param word_map:
+    :param matrix:
+    :param query:
+    :param threshold:
+    :return:
+    """
     if query not in word_map:
         print(query, "not found")
         return None
@@ -57,6 +91,15 @@ def search_similar(word_map, matrix, query, threshold=0.95):
 
 
 def search_dissimilar(word_map, matrix, query, threshold=-0.90):
+    """
+    Search through the matrix and get words that are similar to the give word
+    using the embedding vectors.
+    :param word_map:
+    :param matrix:
+    :param query:
+    :param threshold:
+    :return:
+    """
     if query not in word_map:
         print(query, "not found")
         return None
@@ -76,7 +119,6 @@ def search_dissimilar(word_map, matrix, query, threshold=-0.90):
 def main():
     embedding_filename = '../data/glove.6B.50d.txt'
     word_map, matrix = load_embeddings(embedding_filename)
-
 
     while True:
         query_word = input('enter query word>')

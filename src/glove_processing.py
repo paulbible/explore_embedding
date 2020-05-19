@@ -1,5 +1,7 @@
 """
     A program to load vectors from the GloVe work embeddings
+    The first file that I worked on.
+    Move on to the other files. This one was just getting the basics.
 """
 import numpy as np
 
