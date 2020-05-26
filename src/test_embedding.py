@@ -117,11 +117,13 @@ def main():
     print('+++++ MEAN +++++')
 
     # calculate text 1 words and vector
-    test1_words = load_text_words('../data/test1.txt')
+    # test1_words = load_text_words('../data/test1.txt')
+    test1_words = load_text_words('../data/test3.txt')
     mean_vec1 = reduce_mean_word_list(test1_words, word_map, matrix)
 
     # calculate text 2 words and vector
-    test2_words = load_text_words('../data/test2.txt')
+    # test2_words = load_text_words('../data/test2.txt')
+    test2_words = load_text_words('../data/test4.txt')
     mean_vec2 = reduce_mean_word_list(test2_words, word_map, matrix)
 
     # calculate similarity
