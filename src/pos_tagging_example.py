@@ -34,6 +34,7 @@ def main():
 
             # tag each work with its part of speech
             tagged = nltk.pos_tag(tokens)
+            print(tagged)
             keep_tags = {'NN', 'NNS', 'NNP', 'NNPS'}
             # check tag code meanings here: https://pythonprogramming.net/natural-language-toolkit-nltk-part-speech-tagging/
             for (word, tag) in tagged:
