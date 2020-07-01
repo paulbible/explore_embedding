@@ -1,2 +1,4 @@
 .idea/
 data/glove.6B.50d.txt
+data/glove.6B
+data/glove.6B.zip

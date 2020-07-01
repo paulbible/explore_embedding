@@ -7,9 +7,9 @@ from nltk.corpus import stopwords
 # download some dictionaries / prediction models,
 # Uncomment to download, the comment again.
 #
-# nltk.download('punkt')
-# nltk.download('averaged_perceptron_tagger')
-# nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('stopwords')
 
 
 def main():

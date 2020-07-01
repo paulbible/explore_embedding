@@ -33,4 +33,17 @@ def main():
 
 
 
-main()
+#main()
+
+def print100(num1):
+    for num2 in range(10):
+        for num3 in range(10):
+            print('hello', num1, num2, num3)
+
+
+for num1 in range(10):
+    print100(num1)
+    print('**')
+print('--')
+
+print(list(range(10)))
