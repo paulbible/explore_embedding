@@ -51,6 +51,28 @@ def reduce_sum_word_list(words, word_map, matrix):
     return vec
 
 
+def reduce_sum_word_list_weighted(words, word_map, matrix, word_weight_map):
+    """
+    Take a list of words and summarize them as a vector using 'mean'.
+    returns a numpy vector
+    :param words:
+    :param word_map:
+    :param matrix:
+    :param word_weight_map:
+    :return:
+    """
+    vec = np.zeros(matrix.shape[1])
+    for word in words:
+        word = word.lower()
+        if word in word_map:
+            index = word_map[word]
+            if word in word_weight_map:
+                vec = vec + matrix[index]*word_weight_map[word]
+            else:
+                vec = vec + matrix[index]
+    return vec
+
+
 def cossim(vA, vB):
     """
     Calcuate the cosine similarity value.
