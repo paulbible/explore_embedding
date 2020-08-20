@@ -87,8 +87,19 @@ def filter_stopwords_list_to_list(words):
             out_words.append(word)
     return out_words
 
-def calculate_sentence_vectors_tfidf(input_folder, word_map, matrix, do_stop_filtering=False, do_pos_filtering=False):
 
+def calculate_sentence_vectors_tfidf(input_folder, word_map, matrix, do_stop_filtering=False, do_pos_filtering=False):
+    '''
+    https://medium.com/analytics-vidhya/tf-idf-term-frequency-technique-easiest-explanation-for-text-classification-in-nlp-with-code-8ca3912e58c3
+    https://hackernoon.com/finding-the-most-important-sentences-using-nlp-tf-idf-3065028897a3
+
+    :param input_folder:
+    :param word_map:
+    :param matrix:
+    :param do_stop_filtering:
+    :param do_pos_filtering:
+    :return:
+    '''
     sentence_db_temp = []
     file_labels_temp = []
 
