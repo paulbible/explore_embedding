@@ -22,7 +22,7 @@ def create_options():
         'short': 'n',
         'long': 'topN',
         'input_name': '<number>',
-        'description': 'Return the N words with the highest count for each cluster.',
+        'description': 'Return the N word pairs with the highest count for each cluster.',
         'optional': True
     }
     options['cutoff'] = {
@@ -30,7 +30,7 @@ def create_options():
         'short': 'c',
         'long': 'cutoff',
         'input_name': '<count_limit>',
-        'description': 'Filter words with less that <count_limit> occurrences. (default: 10)',
+        'description': 'Filter word pairs with less that <count_limit> occurrences. (default: 5)',
         'optional': True
     }
     options['percent'] = {
@@ -38,7 +38,7 @@ def create_options():
         'short': 'p',
         'long': 'percent',
         'input_name': '<percent_limit>',
-        'description': 'Filter words that account for less than <percent_limit> of cluster words (default: 0.0,all)',
+        'description': 'Filter word pairs that account for less than <percent_limit> of cluster words (default: 0.0,all)',
         'optional': True
     }
     return options
@@ -57,9 +57,8 @@ def shared_top_10(cluster_word_database):
 
 def main():
     options = create_options()
-    program_description = 'Summarize the word distributions of sentence clusters.\n' \
-                          ' Words are selected if their in-cluster frequency\n' \
-                          ' is greater than data set frequency.'
+    program_description = 'Summarize the word distributions of sentence clusters\n' \
+                          '    using frequent word pairs.'
     print_usage_func = opth.print_usage_maker(program_description, options)
     parse_function = opth.parse_options_maker(options, print_usage_func)
 
@@ -67,7 +66,7 @@ def main():
 
     input_file = opth.validate_required('input', argument_map, print_usage_func)
     output_file = opth.validate_required('output', argument_map, print_usage_func)
-    count_limit = opth.with_default_int('cutoff', argument_map, 10)
+    count_limit = opth.with_default_int('cutoff', argument_map, 1)
     percent_limit = opth.with_default_float('percent', argument_map, 0.0)
 
     top_n = opth.with_default_int('topN', argument_map, None)
@@ -76,7 +75,7 @@ def main():
 
     stops = stopwords.words('english')
     # print(stops)
-    stops.extend(['america', 'americans'])
+    # stops.extend(['america', 'americans'])
     # print(stops)
 
     cluster_word_database = {}
@@ -84,6 +83,8 @@ def main():
 
     all_data_word_counts = defaultdict(int)
     total_words = 0
+
+    pair_word_noise = {"ca_n\'t", "wo_n't"}
 
     with open(input_file, encoding='utf-8') as f:
         for line in f:
@@ -95,28 +96,39 @@ def main():
 
             # split sentence record
             sentence, cluster, filename = line.split(',')
+            if cluster == '':
+                continue
 
             # initialize cluster database
             if cluster not in cluster_word_database:
                 cluster_word_database[cluster] = defaultdict(int)
 
             word_list = nltk.word_tokenize(sentence)
-            for word in word_list:
-                word = word.lower()
-                word = word.strip(string.punctuation)
-                if len(word) == 0 or word in stops:
+            word_count = len(word_list)
+            # skip if there are not pairs in the sentence
+            if word_count < 2:
+                continue
+
+            for i in range(word_count-2):
+                word_1 = word_list[i].lower()
+                word_2 = word_list[i+1].lower()
+                word_1 = word_1.strip(string.punctuation)
+                word_2 = word_2.strip(string.punctuation)
+                if len(word_1) == 0 or word_1 in stops:
                     continue
 
-                cluster_word_database[cluster][word] += 1
-                cluster_word_total[cluster] += 1
-                all_data_word_counts[word] += 1
-                total_words += 1
+                if len(word_2) == 0 or word_2 in stops:
+                    continue
 
-    # testing stuff that didn't work too well
-    # top_10 = shared_top_10(cluster_word_database)
-    # print(top_10)
-    # print(len(top_10))
-    # input()
+                pair_key = word_1 + '_' + word_2
+
+                if pair_key in pair_word_noise:
+                    continue
+
+                cluster_word_database[cluster][pair_key] += 1
+                cluster_word_total[cluster] += 1
+                all_data_word_counts[pair_key] += 1
+                total_words += 1
 
     ################
     # main filtering
@@ -142,27 +154,29 @@ def main():
             cluster_frequency = v/total
             dataset_frequency = all_data_word_counts[k]/total_words
 
+
+
             if v < count_limit:
                 continue
 
             if cluster_frequency < percent_limit:
                 continue
 
-            if cluster_frequency > dataset_frequency:
-                # print(k, v, round(v/total, 5))
-                output_rows.append([cluster, k, str(v), str(round(cluster_frequency, 5)),
-                                    str(round(dataset_frequency, 5))])
-                count += 1
-                if count >= limit:
-                    break
+            outs = [cluster, k, str(v), str(round(cluster_frequency, 5)),
+                    str(round(dataset_frequency, 5))]
+            # print('\t'.join(outs))
+            output_rows.append(outs)
+            count += 1
+            if count >= limit:
+                break
+
+        # input('press enter for next cluster')
 
     with open(output_file,'w') as f:
         f.write(','.join(header) + '\n')
         for row in output_rows:
             # print(','.join(row))
             f.write(','.join(row) + '\n')
-
-
 
 
 main()
