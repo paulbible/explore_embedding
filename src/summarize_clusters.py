@@ -60,7 +60,7 @@ def main():
     program_description = 'Summarize the word distributions of sentence clusters.\n' \
                           ' Words are selected if their in-cluster frequency\n' \
                           ' is greater than data set frequency.'
-    print_usage_func = opth.print_usage_maker('Summarize the word distributions of sentence clusters.', options)
+    print_usage_func = opth.print_usage_maker(program_description, options)
     parse_function = opth.parse_options_maker(options, print_usage_func)
 
     argument_map = parse_function()
