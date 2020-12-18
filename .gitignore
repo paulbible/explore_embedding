@@ -5,4 +5,7 @@ data/glove.6B.zip
 results/
 files/
 speeches/
+/data/test_sent_clusters.csv
 /data/test_sent_table.csv
+/data/test_count_matrix.csv
+src/.Rhistory

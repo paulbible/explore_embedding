@@ -9,9 +9,10 @@ import nltk
 import math
 from nltk.corpus import stopwords
 import numpy as np
-from scipy.cluster.hierarchy import linkage, fcluster
+from scipy.cluster.hierarchy import linkage, fcluster, dendrogram
 from scipy.spatial.distance import pdist
 from collections import defaultdict
+from matplotlib import pyplot as plt
 
 keep_tags = {'NN', 'NNS', 'NNP', 'NNPS',
              'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ',
@@ -279,6 +280,22 @@ def main():
 
     y = pdist(sent_mat, 'cosine')  # define distance between points (sentence vectors)
     z = linkage(y, 'ward')  # define linkage, how to group points together
+
+    '''
+    # This was used to explore the clustering and attempt to set k objectively
+    # https://joernhees.de/blog/2015/08/26/scipy-hierarchical-clustering-and-dendrogram-tutorial/
+    last = z[-50:, 2]
+    last_rev = last[::-1]
+    idxs = np.arange(1, len(last) + 1)
+    plt.plot(idxs, last_rev)
+
+    acceleration = np.diff(last, 2)  # 2nd derivative of the distances
+    acceleration_rev = acceleration[::-1]
+    plt.plot(idxs[:-2] + 1, acceleration_rev)
+    plt.show()
+    #fig = plt.figure(figsize=(25, 10))
+    plt.show()
+    '''
 
     c_labels = fcluster(z, num_clusters, criterion='maxclust')
     print('Done')

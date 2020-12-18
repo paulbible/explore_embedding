@@ -75,7 +75,7 @@ def main():
             speech_cluster_counts[filename][cluster] += 1
 
     clusters = list(clusters)
-    clusters.remove('')
+    #clusters.remove('')
     cluster_ids = [int(cluster) for cluster in clusters]
     cluster_ids.sort()
 
@@ -83,7 +83,7 @@ def main():
         filenames = read_names(name_list)
     else:
         filenames = list(speech_cluster_counts.keys())
-        filenames.remove('')
+        #filenames.remove('')
 
 
     with open(output_file, 'w') as f:
