@@ -1,5 +1,5 @@
 """
-    A top level script to run all the anlaysis
+    A top level script to run all the analysis
 """
 import subprocess
 import os
@@ -12,11 +12,13 @@ def main():
     sotu_speech_folder = '../data/speeches'
     speech_filename_list = '../data/names.txt'
     embedding_file = os.path.join(output_dir, 'glove.6B.50d.txt')
+    #embedding_file = os.path.join(output_dir, 'glove.6B.300d.txt')
 
     R_command = 'C:\\Program Files\\R\\R-4.0.2\\bin\\x64\\Rscript.exe'
 
     # generated files
-    sentence_cluster_out_file = os.path.join(output_dir, 'test_sent_clusters.csv')
+    sentence_cluster_out_file = os.path.join(output_dir, 'test_sent_clusters300d.csv')
+    sentence_cluster_summary_file = os.path.join(output_dir, 'pair_words_cluster_summary.csv')
     regression_matrix_file = os.path.join(output_dir,'regression_count_matrix.csv')
 
     # Run initial with clustering with cluster_text_tool.py
@@ -28,7 +30,7 @@ def main():
     # Create a summary of the clusters using the summarize_clusters_pair_words.py
     # '-i ../data/test_sent_table.csv -o ../data/pair_word_dist_test.csv'
     args = ['python', 'summarize_clusters_pair_words.py','-i', sentence_cluster_out_file,
-            '-o', os.path.join(output_dir, 'pair_words_cluster_summary.csv')]
+            '-o', sentence_cluster_summary_file]
     subprocess.run(args)
 
     # Create a speech cluster count matrix

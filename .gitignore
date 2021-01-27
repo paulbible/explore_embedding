@@ -1,5 +1,7 @@
 .idea/
+back/
 data/glove.6B.50d.txt
+data/glove.6B.300d.txt
 data/glove.6B
 data/glove.6B.zip
 results/
